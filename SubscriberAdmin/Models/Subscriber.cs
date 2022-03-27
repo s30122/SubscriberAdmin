@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.Models
+﻿namespace SubscriberAdmin.Models
 {
     public class Subscriber
     {

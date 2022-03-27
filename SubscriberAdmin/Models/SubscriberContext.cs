@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace WebApplication1.Models
+namespace SubscriberAdmin.Models
 {
     public class SubscriberContext : DbContext
     {

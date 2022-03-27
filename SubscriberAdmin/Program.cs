@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using WebApplication1.Models;
+using SubscriberAdmin.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

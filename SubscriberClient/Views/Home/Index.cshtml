@@ -1,8 +1,11 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var lineLoginSetting = new LineLoginSetting();
+    var loginUrl=$"https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id={lineLoginSetting.ClientId}&redirect_uri={lineLoginSetting.RedirectUri}&state={lineLoginSetting.State}&scope=profile%20openid%20email";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome 韓國女團Twice的團購頻道</h1>
+    <a href="@loginUrl">LINE Login</a>
+    @* <a href="https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=OwRkMjSB5CfGRw7l4p33IL&redirect_uri=https://de58-124-218-48-166.ngrok.io/api/line/my-callback&scope=notify&state=abc123&response_mode=form_post">我要加入團購</a> *@
 </div>

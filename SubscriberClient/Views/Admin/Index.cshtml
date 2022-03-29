@@ -1,0 +1,8 @@
+@model LineNotifyMessage
+<h2>admin Index</h2>
+<form asp-action="Send">
+    <label asp-for="Message">要發出的訊息：</label>
+    <input type="text" asp-for="Message"/>
+    
+    <button type="submit">Send</button>
+</form>

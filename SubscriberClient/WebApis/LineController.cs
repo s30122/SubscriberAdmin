@@ -2,7 +2,6 @@ using System.Collections;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
@@ -125,20 +124,5 @@ namespace SubscriberClient.WebApis
 
             return RedirectToAction("MemberSubscribe", "Home", member);
         }
-    }
-
-    public class LineRevokeResponse
-    {
-        [JsonPropertyName("status")]
-        public HttpStatusCode Status { get; set; }
-
-        [JsonPropertyName("message")]
-        public string Message { get; set; }
-    }
-
-    public class LineNotifyTokenResponse
-    {
-        [JsonPropertyName("access_token")]
-        public string AccessToken { get; set; }
     }
 }

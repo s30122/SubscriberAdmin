@@ -1,6 +1,10 @@
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SubscriberAdmin.Models;
+using SubscriberClient.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +13,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddDbContext<SubscriberContext>(options => options.UseInMemoryDatabase("subs"));
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
@@ -32,3 +37,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+

@@ -1,0 +1,20 @@
+@model SubscriberAdmin.Models.Member 
+@{
+    var setting = new LineNotifySetting();
+    var url = $"https://notify-bot.line.me/oauth/authorize?response_type=code&client_id={setting.ClientId}&redirect_uri={setting.RedirectUri}&scope=notify&state={Model.RandomState}&response_mode=form_post";
+}
+
+<h2>會員訂閱</h2>
+@if (string.IsNullOrWhiteSpace(Model.NotifyAccessToken))
+{
+    <a href="@url"> 我是 @Model.Name ， 我要LINE訂閱</a>
+}
+else
+{
+    <h3>訂閱成功</h3>
+    <form asp-controller="Line" asp-action="Unsubscribe">
+        <input type="text" asp-for="NotifyAccessToken" hidden="hidden"/>
+        <input type="text" asp-for="Id" hidden="hidden"/>
+        <button type="submit">我要取消訂閱</button>
+    </form>
+}

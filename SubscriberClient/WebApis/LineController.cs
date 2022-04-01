@@ -55,13 +55,14 @@ namespace SubscriberClient.WebApis
             await _db.SaveChangesAsync();
 
 
-            return RedirectToAction("MemberSubscribe", "Home", member);
+            return Redirect($"/home/MemberSubscribe?memberId={member.Id}");
         }
 
         [HttpPost]
         public async Task<IActionResult> Unsubscribe([FromForm] string notifyAccessToken, [FromForm] int id)
         {
-            var member = await _db.Members.SingleOrDefaultAsync(x => x.Id == id && x.NotifyAccessToken == notifyAccessToken);
+            var member =
+                await _db.Members.SingleOrDefaultAsync(x => x.Id == id && x.NotifyAccessToken == notifyAccessToken);
             if (member is null)
             {
                 return new BadRequestResult();
@@ -74,9 +75,9 @@ namespace SubscriberClient.WebApis
             var revokeResponse = await responseMessage.Content.ReadFromJsonAsync<LineRevokeResponse>();
             if (revokeResponse.Status == HttpStatusCode.OK && revokeResponse.Message == "ok")
             {
-                member.NotifyAccessToken=string.Empty;
+                member.NotifyAccessToken = string.Empty;
                 await _db.SaveChangesAsync();
-                return RedirectToAction("MemberSubscribe","Home",member);
+                return Redirect($"/home/index?memberId={member.Id}");
             }
 
             return Ok("取消訂閱失敗");
@@ -121,8 +122,7 @@ namespace SubscriberClient.WebApis
             await _db.Members.AddAsync(member);
             await _db.SaveChangesAsync();
 
-
-            return RedirectToAction("MemberSubscribe", "Home", member);
+            return Redirect($"/home/MemberSubscribe?memberId={member.Id}");
         }
     }
 }

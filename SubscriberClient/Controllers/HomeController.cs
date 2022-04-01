@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SubscriberAdmin.Models;
 using SubscriberClient.Models;
 
@@ -9,10 +10,13 @@ namespace SubscriberClient.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly SubscriberContext _db;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger,
+        SubscriberContext db)
     {
         _logger = logger;
+        _db = db;
     }
 
     public IActionResult Index()
@@ -25,8 +29,14 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult MemberSubscribe(Member member)
+    public async Task<IActionResult> MemberSubscribe(int memberId)
     {
+        var member = await _db.Members.FirstOrDefaultAsync(x => x.Id == memberId);
+        if (member is null)
+        {
+            RedirectToAction("Index", memberId);
+        }
+
         return View(member);
     }
 

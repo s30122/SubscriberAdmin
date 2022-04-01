@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using SubscriberAdmin.Models;
 using SubscriberClient.Models;
 
@@ -17,15 +17,18 @@ namespace SubscriberClient.WebApis
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly SubscriberContext _db;
-        private readonly IMemoryCache _cache;
+        private readonly LineLoginSetting _loginSetting;
+        private readonly LineNotifySetting _lineNotifySetting;
 
         public LineController(IHttpClientFactory httpClientFactory,
             SubscriberContext db,
-            IMemoryCache cache)
+            IOptions<LineLoginSetting> options,
+            IOptions<LineNotifySetting> notifyOptions)
         {
             _httpClientFactory = httpClientFactory;
             _db = db;
-            _cache = cache;
+            _loginSetting = options.Value;
+            _lineNotifySetting = notifyOptions.Value;
         }
 
         [HttpPost("notify-callback")]
@@ -37,17 +40,15 @@ namespace SubscriberClient.WebApis
                 return new BadRequestResult();
             }
 
-            var setting = new LineNotifySetting();
-
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.PostAsync("https://notify-bot.line.me/oauth/token",
                 new FormUrlEncodedContent(new[]
                 {
                     new KeyValuePair<string, string>("grant_type", "authorization_code"),
                     new KeyValuePair<string, string>("code", notify.Code),
-                    new KeyValuePair<string, string>("redirect_uri", setting.RedirectUri),
-                    new KeyValuePair<string, string>("client_id", setting.ClientId),
-                    new KeyValuePair<string, string>("client_secret", setting.Secret),
+                    new KeyValuePair<string, string>("redirect_uri", _lineNotifySetting.RedirectUri),
+                    new KeyValuePair<string, string>("client_id", _lineNotifySetting.ClientId),
+                    new KeyValuePair<string, string>("client_secret", _lineNotifySetting.Secret),
                 }));
             var token = await responseMessage.Content.ReadFromJsonAsync<LineNotifyTokenResponse>();
 
@@ -86,9 +87,7 @@ namespace SubscriberClient.WebApis
         [HttpGet("login-callback")]
         public async Task<IActionResult> LoginCallback([FromQuery] LineLoginCallback callback)
         {
-            var setting = new LineLoginSetting();
-
-            if (callback.State != setting.State)
+            if (callback.State != _loginSetting.State)
             {
                 return new BadRequestResult();
             }
@@ -99,9 +98,9 @@ namespace SubscriberClient.WebApis
                 {
                     new KeyValuePair<string, string>("grant_type", "authorization_code"),
                     new KeyValuePair<string, string>("code", callback.Code),
-                    new KeyValuePair<string, string>("redirect_uri", setting.RedirectUri),
-                    new KeyValuePair<string, string>("client_id", setting.ClientId),
-                    new KeyValuePair<string, string>("client_secret", setting.Secret),
+                    new KeyValuePair<string, string>("redirect_uri", _loginSetting.RedirectUri),
+                    new KeyValuePair<string, string>("client_id", _loginSetting.ClientId),
+                    new KeyValuePair<string, string>("client_secret", _loginSetting.Secret),
                 }));
             var tokenResponse = await responseMessage.Content.ReadFromJsonAsync<LineLoginTokenResponse>();
 
@@ -109,7 +108,7 @@ namespace SubscriberClient.WebApis
                 new FormUrlEncodedContent(new[]
                 {
                     new KeyValuePair<string, string>("id_token", tokenResponse.IdToken),
-                    new KeyValuePair<string, string>("client_id", setting.ClientId),
+                    new KeyValuePair<string, string>("client_id", _loginSetting.ClientId),
                 }));
 
             var verifyResponse = await responseMessage2.Content.ReadFromJsonAsync<LineLoginVerifyResponse>();

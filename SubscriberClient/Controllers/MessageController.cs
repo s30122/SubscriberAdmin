@@ -5,19 +5,18 @@ using SubscriberClient.Models;
 
 namespace SubscriberClient.Controllers;
 
-public class AdminController : Controller
+public class MessageController : Controller
 {
     private readonly SubscriberContext _db;
     private readonly IHttpClientFactory _clientFactory;
 
-    public AdminController(SubscriberContext db,
+    public MessageController(SubscriberContext db,
         IHttpClientFactory clientFactory)
     {
         _db = db;
         _clientFactory = clientFactory;
     }
 
-    // GET
     public IActionResult Index()
     {
         return View();

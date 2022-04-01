@@ -1,8 +1,10 @@
-﻿@{
+﻿@using Microsoft.Extensions.Options
+@inject IOptions<LineLoginSetting> _options
+@{
     var memberId = Context.Request.Query["memberId"].FirstOrDefault();
 
     ViewData["Title"] = "Home Page";
-    var lineLoginSetting = new LineLoginSetting();
+    var lineLoginSetting = _options.Value;
     var loginUrl = $"https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id={lineLoginSetting.ClientId}&redirect_uri={lineLoginSetting.RedirectUri}&state={lineLoginSetting.State}&scope=profile%20openid%20email";
 }
 

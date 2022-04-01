@@ -8,11 +8,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SubscriberAdmin\SubscriberAdmin.csproj" />
+        <ProjectReference Include="..\SubscriberAdmin\SubscriberAdmin.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="appsettings.Development.json" />
+    </ItemGroup>
+
 
 </Project>

@@ -2,6 +2,7 @@
 <form asp-action="Send">
     <label asp-for="Message">要發出的訊息：</label>
     <input type="text" asp-for="Message"/>
+    <input type="text" asp-for="MemberId" value="@Context.Request.Query["memberId"].FirstOrDefault()" hidden="hidden"/>
     
     <button type="submit">Send</button>
 </form>

@@ -13,9 +13,8 @@
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
             @{
-                var index = Url.Action("Index", "Home");
                 var memberId = Context.Request.Query["memberId"].FirstOrDefault();
-                var homeUrl = $"{index}";
+                var homeUrl = $"{Url.Action("Index", "Home")}";
                 if (!string.IsNullOrWhiteSpace(memberId))
                 {
                     homeUrl += $"?memberId={memberId}";
@@ -31,11 +30,15 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" href="@homeUrl">Home</a>
                     </li>
+                    @{
+                        var messageUrl = $"{Url.Action("Index", "Message")}";
+                        if (!string.IsNullOrWhiteSpace(memberId))
+                        {
+                            messageUrl += $"?memberId={memberId}";
+                        }
+                    }
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Message" asp-action="Index">發送訊息測試</a>
+                        <a href="@messageUrl">發送訊息測試</a>
                     </li>
                 </ul>
             </div>
@@ -49,9 +52,7 @@
 </div>
 
 <footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2022 - SubscriberClient - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
+
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

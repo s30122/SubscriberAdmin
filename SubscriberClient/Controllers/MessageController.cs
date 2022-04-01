@@ -25,8 +25,8 @@ public class MessageController : Controller
     [HttpPost]
     public async Task<IActionResult> Send([FromForm] LineNotifyMessage req)
     {
-        var members = await _db.Members.Select(x => x.NotifyAccessToken).ToListAsync();
-        var clients = members.Select(x =>
+        var tokens = await _db.Members.Select(x => x.NotifyAccessToken).ToListAsync();
+        var clients = tokens.Select(x =>
         {
             var client = _clientFactory.CreateClient();
 
@@ -39,6 +39,6 @@ public class MessageController : Controller
                 {
                     new KeyValuePair<string, string>("message", req.Message)
                 }))));
-        return RedirectToAction("Index");
+        return Redirect($"{Url.Action("Index")}?memberId={req.MemberId}");
     }
 }
